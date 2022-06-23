@@ -29,7 +29,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(allowed_routes).hasRole("NORMAL")
                 .antMatchers("/user/**").hasRole("ADMIN")
                 .antMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated().and().formLogin().loginPage("/auth/login").loginProcessingUrl("/dologin").defaultSuccessUrl("/user");
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/auth/login")
+                .loginProcessingUrl("/dologin")
+                .defaultSuccessUrl("/user");
     }
 
     @Override
