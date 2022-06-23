@@ -4,18 +4,19 @@ import com.example.spingrest.Models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 @Service
-public class UserDetailService implements UserDetails {
+public class CustomUserDetail implements UserDetails {
 
-    User user;
+    private User user;
 
-    public void UserDetailsService(User user1) {
-        this.user = user1;
+    public CustomUserDetail(User user) {
+        this.user = user;
     }
 
     @Override
@@ -54,4 +55,5 @@ public class UserDetailService implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

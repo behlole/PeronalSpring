@@ -57,4 +57,10 @@ public class UserRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, User.class);
         return updateResult.getMatchedCount() != 0 ? "Record Updated" : "Record Not Found";
     }
+
+    public User findByUsername(String username) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("username").is(username));
+        return mongoTemplate.findOne(query, User.class);
+    }
 }
