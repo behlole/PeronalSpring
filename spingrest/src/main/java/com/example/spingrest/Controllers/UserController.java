@@ -7,6 +7,8 @@ import com.mongodb.client.result.DeleteResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("*")
+//@PreAuthorize("hasRole(ADMIN)")
 public class UserController {
     @Autowired
     UserRepository userRepository;
+
 
     ResponseBody responseBody = new ResponseBody();
 
@@ -54,7 +58,8 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable String id) {
         try {
-            setResponse(user, userRepository.update(user, id), true);
+            String updated_user = userRepository.update(user, id);
+            setResponse(userRepository.getUserById(id), updated_user, true);
         } catch (Exception e) {
             setResponse(null, e.getMessage(), false);
         }

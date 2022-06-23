@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,7 +21,11 @@ public class UserRepository {
     @Autowired
     MongoTemplate mongoTemplate;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     public User insert(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return mongoTemplate.insert(user);
     }
 
@@ -44,8 +49,11 @@ public class UserRepository {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
         Update update = new Update();
-        update.set("name", user.getName());
+        update.set("username", user.getUsername());
         update.set("age", user.getAge());
+        update.set("role", user.getRole());
+        if (user.getPassword() != null)
+            update.set("password", passwordEncoder.encode(user.getPassword()));
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, User.class);
         return updateResult.getMatchedCount() != 0 ? "Record Updated" : "Record Not Found";
     }
